@@ -57,7 +57,7 @@ Bad Parts:
 
 The track sometimes succesfully segments and tracks objects despite there being an obstacle near the desired object. However, the biggest problem of the tracking algorithm is that the track will sometimes combine multiple objects into one track.  
 
-The way that I decide to begin new tracks and terminate old tracks was to keep account of the number of consecutive misses and whether the blob (centroid) is still being tracked  
+The way that I decide to begin new tracks and terminate old tracks was to keep account of the number of consecutive misses and whether the blob (centroid) is still being tracked.  
 Upon entering the find match function, I set all of the blobs "match or new" variable to false. Then I loop through all blobs and compare them with the frame blobs. If they found a match (smallest distance), then I will set this value to true. After all the values are set, I looped through the blobs again to check whether the value is true or false. If it is false, I will add one to the number of misses for the blob. I set the threshold value for the number of misses to 10\. So if the number of misses is 5 or greater, I will set the "still being tracked" variable to false. During the drawing stage, I will only draw for blobs that are still being tracked.
 
 <pre>                def matchCurrentFrameBlobs(existingBlobs, currFrameBlobs):
@@ -93,8 +93,7 @@ Upon entering the find match function, I set all of the blobs "match or new" var
                                 existingBlobs[i].stillBeingTracked = False 
             </pre>
 
-When objects touch with each other, the bounding boxes and track become one. This is a problem that was difficult to fix. I think that the primary way of fixing this problem  
-is to fix the segmentation. After messing around with the kernel size for dialation and erosion the final kernel showed the best performance. To compensate for when objects occlude with each other, I let the centroid measurement equal the prediction. This only lasts for 10 frames since the threshold for the number of misses is 10\.
+When objects touch with each other, the bounding boxes and track become one. This is a problem that was difficult to fix. I think that the primary way of fixing this problem is to fix the segmentation. After messing around with the kernel size for dialation and erosion the final kernel showed the best performance. To compensate for when objects occlude with each other, I let the centroid measurement equal the prediction. This only lasts for 10 frames since the threshold for the number of misses is 10\.
 
 Spurious detections in my algorithm tend to not be noise in the image. This is because the image preperation stage removes most noise in the image. Most spurious detections will be a new bat/cell. However, if there are random objects that appear and disappear, the algorithm will only catch them for awhile but when they are counted as a miss, the algorithm will ignore it.
 
